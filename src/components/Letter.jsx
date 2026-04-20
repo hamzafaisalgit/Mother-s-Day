@@ -68,7 +68,7 @@ export default function Letter({ visible }) {
           </div>
 
           {/* Letter text */}
-          <div className="font-dancing text-xl md:text-2xl leading-relaxed" style={{ color: '#5C2E2E', minHeight: '300px' }}>
+          <div className="font-dancing text-[1.3rem] md:text-[1.55rem] leading-loose" style={{ color: '#5C2E2E', minHeight: '300px' }}>
             {shouldType ? (
               <TypeAnimation
                 sequence={[

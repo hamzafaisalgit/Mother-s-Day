@@ -118,7 +118,7 @@ export default function Flower({ index, memory }) {
       <AnimatePresence>
         {hovered && (
           <motion.div
-            className="absolute z-20 w-56 rounded-xl px-5 py-4 pointer-events-none"
+            className="absolute z-20 w-72 rounded-xl px-6 py-5 pointer-events-none"
             style={{
               bottom: '95%',
               [tooltipLeft ? 'left' : 'right']: '-20px',
@@ -131,7 +131,7 @@ export default function Flower({ index, memory }) {
             exit={{ opacity: 0, y: 8, scale: 0.9 }}
             transition={{ type: 'spring', stiffness: 350, damping: 28 }}
           >
-            <p className="font-dancing text-base leading-snug text-center" style={{ color: '#5C2E2E' }}>
+            <p className="font-dancing text-xl leading-relaxed text-center" style={{ color: '#5C2E2E' }}>
               {memory}
             </p>
             {/* Small arrow */}

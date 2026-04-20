@@ -152,7 +152,7 @@ export default function HeartButton() {
 
         {/* Counter */}
         <motion.p
-          className="font-playfair text-lg mt-6"
+          className="font-playfair text-xl mt-6"
           style={{ color: '#881337' }}
           key={count}
           initial={{ scale: 1.3, opacity: 0 }}
@@ -164,7 +164,7 @@ export default function HeartButton() {
       </div>
 
       {/* Reason display */}
-      <div className="relative mt-10 w-full max-w-lg min-h-28 flex items-center justify-center">
+      <div className="relative mt-10 w-full max-w-xl min-h-28 flex items-center justify-center">
         <AnimatePresence mode="wait">
           {currentReason && (
             <motion.div
@@ -180,7 +180,7 @@ export default function HeartButton() {
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
               transition={{ duration: 0.4, ease: 'easeOut' }}
             >
-              <p className="font-dancing text-xl md:text-2xl leading-relaxed" style={{ color: '#5C2E2E' }}>
+              <p className="font-dancing text-[1.3rem] md:text-[1.55rem] leading-loose" style={{ color: '#5C2E2E' }}>
                 "{currentReason}"
               </p>
             </motion.div>
