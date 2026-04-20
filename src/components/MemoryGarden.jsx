@@ -17,7 +17,7 @@ export default function MemoryGarden() {
       </motion.h2>
 
       <motion.p
-        className="font-dancing text-xl md:text-2xl text-center mb-16"
+        className="font-dancing text-2xl md:text-3xl text-center mb-16"
         style={{ color: '#E8998D' }}
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}

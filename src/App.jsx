@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import Intro from './components/Intro';
 import FallingPetals from './components/FallingPetals';
 import Envelope from './components/Envelope';
 import Letter from './components/Letter';
@@ -18,26 +19,20 @@ export default function App() {
   };
 
   return (
-    <div className="animated-bg relative">
-      {/* Always-present falling petals */}
-      <FallingPetals count={24} />
+    <>
+      {/* Intro is a fixed overlay — main content renders beneath it immediately */}
+      <Intro />
 
-      {/* Section 1 — Envelope hero */}
-      <Envelope onOpen={handleEnvelopeOpen} />
-
-      {/* Section 2 — Letter */}
-      <div ref={letterRef}>
-        <Letter visible={envelopeOpened} />
+      <div className="animated-bg relative">
+        <FallingPetals count={24} />
+        <Envelope onOpen={handleEnvelopeOpen} />
+        <div ref={letterRef}>
+          <Letter visible={envelopeOpened} />
+        </div>
+        <HeartButton />
+        <MemoryGarden />
+        <Closing />
       </div>
-
-      {/* Section 3 — Heart button reasons */}
-      <HeartButton />
-
-      {/* Section 4 — Memory garden */}
-      <MemoryGarden />
-
-      {/* Section 5 — Closing */}
-      <Closing />
-    </div>
+    </>
   );
 }

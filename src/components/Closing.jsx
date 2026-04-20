@@ -26,7 +26,7 @@ export default function Closing() {
       </motion.h2>
 
       <motion.p
-        className="font-dancing text-2xl md:text-3xl mb-16 max-w-lg leading-relaxed"
+        className="font-dancing text-3xl md:text-4xl mb-16 max-w-xl leading-relaxed"
         style={{ color: '#5C2E2E' }}
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -56,7 +56,7 @@ export default function Closing() {
       </motion.div>
 
       <motion.p
-        className="font-dancing text-xl md:text-2xl"
+        className="font-dancing text-2xl md:text-3xl"
         style={{ color: '#E8998D' }}
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}

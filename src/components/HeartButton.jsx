@@ -103,7 +103,7 @@ export default function HeartButton() {
       </motion.h2>
 
       <motion.p
-        className="font-dancing text-xl md:text-2xl mb-14 text-center"
+        className="font-dancing text-2xl md:text-3xl mb-14 text-center"
         style={{ color: '#E8998D' }}
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -180,7 +180,7 @@ export default function HeartButton() {
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
               transition={{ duration: 0.4, ease: 'easeOut' }}
             >
-              <p className="font-dancing text-[1.3rem] md:text-[1.55rem] leading-loose" style={{ color: '#5C2E2E' }}>
+              <p className="font-dancing text-[1.45rem] md:text-[1.75rem] leading-loose" style={{ color: '#5C2E2E' }}>
                 "{currentReason}"
               </p>
             </motion.div>

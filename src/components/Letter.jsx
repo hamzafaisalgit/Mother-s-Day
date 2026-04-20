@@ -68,7 +68,7 @@ export default function Letter({ visible }) {
           </div>
 
           {/* Letter text */}
-          <div className="font-dancing text-[1.3rem] md:text-[1.55rem] leading-loose" style={{ color: '#5C2E2E', minHeight: '300px' }}>
+          <div className="font-dancing text-[1.45rem] md:text-[1.75rem] leading-loose" style={{ color: '#5C2E2E', minHeight: '300px' }}>
             {shouldType ? (
               <TypeAnimation
                 sequence={[
@@ -92,7 +92,7 @@ export default function Letter({ visible }) {
 
         {/* Scroll hint */}
         <motion.p
-          className="font-dancing text-lg text-center mt-6"
+          className="font-dancing text-xl text-center mt-6"
           style={{ color: '#E8998D' }}
           initial={{ opacity: 0 }}
           animate={done ? { opacity: [0, 1, 0.6] } : { opacity: 0 }}
