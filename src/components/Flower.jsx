@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 const Rose = ({ color = '#F9A8D4', center = '#881337' }) => (
   <svg width="80" height="90" viewBox="0 0 80 90" fill="none">
@@ -80,75 +80,134 @@ const FLOWER_COMPONENTS = [
 
 export default function Flower({ index, memory }) {
   const [hovered, setHovered] = useState(false);
-  const { Component, props } = FLOWER_COMPONENTS[index % FLOWER_COMPONENTS.length];
+  const [tapped, setTapped] = useState(false);
+  const containerRef = useRef(null);
 
-  // Random sway timing so flowers feel independent
+  const { Component, props } = FLOWER_COMPONENTS[index % FLOWER_COMPONENTS.length];
   const swayDuration = 2.5 + (index * 0.4) % 2;
   const swayDelay = (index * 0.3) % 2;
-
-  // Tooltip position — alternate left/right to avoid clipping
   const tooltipLeft = index % 2 === 0;
 
-  return (
-    <div
-      className="relative flex flex-col items-center cursor-pointer"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onFocus={() => setHovered(true)}
-      onBlur={() => setHovered(false)}
-      tabIndex={0}
-      role="button"
-      aria-label={`Memory ${index + 1}`}
-    >
-      <motion.div
-        animate={hovered
-          ? { scale: 1.2, filter: 'drop-shadow(0 0 12px rgba(232,153,141,0.6))' }
-          : { rotate: ['-4deg', '4deg', '-4deg'] }
-        }
-        transition={hovered
-          ? { duration: 0.3, ease: 'easeOut' }
-          : { duration: swayDuration, delay: swayDelay, repeat: Infinity, ease: 'easeInOut' }
-        }
-        style={{ transformOrigin: 'bottom center' }}
-      >
-        <Component {...props} />
-      </motion.div>
+  // Close mobile popup when tapping outside this flower
+  useEffect(() => {
+    if (!tapped) return;
+    const handleOutsideTouch = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setTapped(false);
+      }
+    };
+    document.addEventListener('touchstart', handleOutsideTouch);
+    return () => document.removeEventListener('touchstart', handleOutsideTouch);
+  }, [tapped]);
 
-      {/* Memory tooltip */}
-      <AnimatePresence>
-        {hovered && (
-          <motion.div
-            className="absolute z-20 w-80 rounded-xl px-6 py-5 pointer-events-none"
-            style={{
-              bottom: '95%',
-              [tooltipLeft ? 'left' : 'right']: '-20px',
-              background: 'linear-gradient(135deg, #FFFDF8, #FFF5EC)',
-              boxShadow: '0 8px 30px rgba(232,153,141,0.3), 0 2px 8px rgba(0,0,0,0.06)',
-              border: '1px solid rgba(232,153,141,0.25)',
-            }}
-            initial={{ opacity: 0, y: 8, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.9 }}
-            transition={{ type: 'spring', stiffness: 350, damping: 28 }}
-          >
-            <p className="font-dancing text-[1.35rem] leading-relaxed text-center" style={{ color: '#5C2E2E' }}>
-              {memory}
-            </p>
-            {/* Small arrow */}
-            <div
-              className="absolute w-3 h-3 rotate-45"
+  const handleTouchStart = (e) => {
+    e.preventDefault(); // prevent simulated mouse events on touch devices
+    setTapped((prev) => !prev);
+  };
+
+  const isAnimated = hovered || tapped;
+
+  return (
+    <>
+      <div
+        ref={containerRef}
+        className="relative flex flex-col items-center cursor-pointer"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onFocus={() => setHovered(true)}
+        onBlur={() => setHovered(false)}
+        onTouchStart={handleTouchStart}
+        tabIndex={0}
+        role="button"
+        aria-label={`Memory ${index + 1}`}
+      >
+        <motion.div
+          animate={isAnimated
+            ? { scale: 1.2, filter: 'drop-shadow(0 0 12px rgba(232,153,141,0.6))' }
+            : { rotate: ['-4deg', '4deg', '-4deg'] }
+          }
+          transition={isAnimated
+            ? { duration: 0.3, ease: 'easeOut' }
+            : { duration: swayDuration, delay: swayDelay, repeat: Infinity, ease: 'easeInOut' }
+          }
+          style={{ transformOrigin: 'bottom center' }}
+        >
+          <Component {...props} />
+        </motion.div>
+
+        {/* Desktop tooltip — shown on mouse hover */}
+        <AnimatePresence>
+          {hovered && (
+            <motion.div
+              className="absolute z-20 w-80 rounded-xl px-6 py-5 pointer-events-none"
               style={{
-                bottom: '-7px',
-                [tooltipLeft ? 'left' : 'right']: '28px',
-                background: '#FFF5EC',
+                bottom: '95%',
+                [tooltipLeft ? 'left' : 'right']: '-20px',
+                background: 'linear-gradient(135deg, #FFFDF8, #FFF5EC)',
+                boxShadow: '0 8px 30px rgba(232,153,141,0.3), 0 2px 8px rgba(0,0,0,0.06)',
                 border: '1px solid rgba(232,153,141,0.25)',
-                borderTop: 'none',
-                borderLeft: 'none',
               }}
-            />
+              initial={{ opacity: 0, y: 8, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 8, scale: 0.9 }}
+              transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+            >
+              <p className="font-dancing text-[1.35rem] leading-relaxed text-center" style={{ color: '#5C2E2E' }}>
+                {memory}
+              </p>
+              <div
+                className="absolute w-3 h-3 rotate-45"
+                style={{
+                  bottom: '-7px',
+                  [tooltipLeft ? 'left' : 'right']: '28px',
+                  background: '#FFF5EC',
+                  border: '1px solid rgba(232,153,141,0.25)',
+                  borderTop: 'none',
+                  borderLeft: 'none',
+                }}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Mobile popup — shown on tap, centered & fixed to avoid edge clipping */}
+      <AnimatePresence>
+        {tapped && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center px-6"
+            style={{ background: 'rgba(88, 28, 28, 0.35)', backdropFilter: 'blur(2px)' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onTouchStart={(e) => { e.stopPropagation(); setTapped(false); }}
+          >
+            <motion.div
+              className="w-full max-w-sm rounded-2xl px-8 py-8"
+              style={{
+                background: 'linear-gradient(135deg, #FFFDF8, #FFF5EC)',
+                boxShadow: '0 20px 60px rgba(232,153,141,0.45), 0 4px 16px rgba(0,0,0,0.12)',
+                border: '1px solid rgba(232,153,141,0.35)',
+              }}
+              initial={{ opacity: 0, scale: 0.85, y: 24 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.85, y: 24 }}
+              transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+              onTouchStart={(e) => e.stopPropagation()}
+            >
+              <p className="font-dancing text-[1.4rem] leading-relaxed text-center" style={{ color: '#5C2E2E' }}>
+                {memory}
+              </p>
+              <p
+                className="text-center text-xs mt-5 tracking-wide uppercase"
+                style={{ color: '#C0878787', opacity: 0.55 }}
+              >
+                tap anywhere to close
+              </p>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 }
