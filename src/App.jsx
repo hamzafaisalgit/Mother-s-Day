@@ -3,7 +3,7 @@ import Intro from './components/Intro';
 import FallingPetals from './components/FallingPetals';
 import Envelope from './components/Envelope';
 import Letter from './components/Letter';
-import HeartButton from './components/HeartButton';
+import StarSky from './components/StarSky';
 import MemoryGarden from './components/MemoryGarden';
 import Closing from './components/Closing';
 
@@ -29,7 +29,7 @@ export default function App() {
         <div ref={letterRef}>
           <Letter visible={envelopeOpened} />
         </div>
-        <HeartButton />
+        <StarSky />
         <MemoryGarden />
         <Closing />
       </div>
