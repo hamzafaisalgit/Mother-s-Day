@@ -145,9 +145,10 @@ export default function StarSky() {
           position:'absolute', left:n.left, top:n.top,
           width:n.w, height:n.h,
           background:`radial-gradient(ellipse, ${n.color} 0%, transparent 70%)`,
-          filter:'blur(22px)',
+          filter:'blur(14px)',
           transform:'translate(-50%,-50%)',
           pointerEvents:'none', zIndex:1,
+          willChange: 'auto',
         }} />
       ))}
 

@@ -15,11 +15,19 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
   font-family: 'Lato', sans-serif;
   overflow-x: hidden;
+  max-width: 100%;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: var(--star-base); }
+  50%       { opacity: 1; }
 }
 
 .font-playfair {
