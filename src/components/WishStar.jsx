@@ -4,61 +4,74 @@ import { useState, useRef } from 'react';
 const STAR = 'M0,-10 L2.4,-3.4 L9.5,-3.1 L4.3,1.3 L5.9,8.5 L0,4.9 L-5.9,8.5 L-4.3,1.3 L-9.5,-3.1 L-2.4,-3.4 Z';
 const STAR_INNER = 'M0,-7 L1.7,-2.4 L6.7,-2.2 L3,0.9 L4.1,5.9 L0,3.4 L-4.1,5.9 L-3,0.9 L-6.7,-2.2 L-1.7,-2.4 Z';
 
+const TOOLTIP_W = 185;
+const MARGIN    = 10;
+
 export default function WishStar({ wish, seed = 0 }) {
-  const [hovered, setHovered]   = useState(false);
-  const reduced                 = useReducedMotion();
-  const dismissRef              = useRef(null);
+  const [hovered,  setHovered]  = useState(false);
+  const [tipStyle, setTipStyle] = useState({});
+  const reduced    = useReducedMotion();
+  const starRef    = useRef(null);
+  const dismissRef = useRef(null);
 
   const duration = 2.8 + (seed * 0.41) % 1.4;
   const delay    = (seed * 0.33) % 2.2;
 
-  // ── Tooltip vertical direction ──
-  const tooltipAbove = wish.y >= 42;
+  // Compute fixed position so tooltip stays inside viewport regardless of star location
+  const computeTip = () => {
+    if (!starRef.current) return;
+    const r  = starRef.current.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
 
-  // ── Tooltip horizontal anchor — keeps it inside the section on edge stars ──
-  // Left strip stars (x < 25) → anchor tooltip to the left of the star
-  // Right strip stars (x > 75) → anchor tooltip to the right of the star
-  // Centre stars → centred as normal
-  const anchor = wish.x < 25 ? 'left' : wish.x > 75 ? 'right' : 'center';
+    // Horizontal: centre on star, then clamp to screen
+    let left = cx - TOOLTIP_W / 2;
+    left = Math.max(MARGIN, Math.min(left, window.innerWidth - TOOLTIP_W - MARGIN));
 
-  const tooltipHoriz =
-    anchor === 'left'  ? { left: '-6px',             transform: 'none' } :
-    anchor === 'right' ? { right: '-6px', left: 'auto', transform: 'none' } :
-                         { left: '50%',  transform: 'translateX(-50%)' };
+    // Arrow points back to where the star actually is
+    const arrowLeft = Math.max(12, Math.min(cx - left, TOOLTIP_W - 12));
 
-  const arrowHoriz =
-    anchor === 'left'  ? { left: '14px',              transform: 'none' } :
-    anchor === 'right' ? { right: '14px', left: 'auto', transform: 'none' } :
-                         { left: '50%',  transform: 'translateX(-50%)' };
+    // Vertical: show above star if it's in the lower half of the viewport
+    const above = r.top > window.innerHeight * 0.5;
 
-  // ── Touch: tap to show, auto-dismiss after 3 s ──
-  const handleTouchStart = (e) => {
-    e.preventDefault(); // stops ghost-click delay on mobile
-    clearTimeout(dismissRef.current);
-    setHovered(h => {
-      if (h) return false; // second tap hides
-      dismissRef.current = setTimeout(() => setHovered(false), 3000);
-      return true;
+    setTipStyle({
+      left,
+      arrowLeft,
+      above,
+      ...(above ? { bottom: window.innerHeight - r.top + 12 } : { top: r.bottom + 12 }),
     });
   };
 
-  const showTooltip = () => {
+  const showTip = () => {
+    computeTip();
     clearTimeout(dismissRef.current);
     setHovered(true);
   };
-  const hideTooltip = () => {
+  const hideTip = () => {
     clearTimeout(dismissRef.current);
     setHovered(false);
+  };
+
+  // Touch: tap to toggle, auto-dismiss after 3 s
+  const handleTouch = (e) => {
+    e.preventDefault();
+    clearTimeout(dismissRef.current);
+    if (hovered) {
+      setHovered(false);
+    } else {
+      computeTip();
+      setHovered(true);
+      dismissRef.current = setTimeout(() => setHovered(false), 3000);
+    }
   };
 
   return (
     <div
       style={{ position: 'relative', display: 'inline-block' }}
-      onMouseEnter={showTooltip}
-      onMouseLeave={hideTooltip}
-      onFocus={showTooltip}
-      onBlur={hideTooltip}
-      onTouchStart={handleTouchStart}
+      onMouseEnter={showTip}
+      onMouseLeave={hideTip}
+      onFocus={showTip}
+      onBlur={hideTip}
+      onTouchStart={handleTouch}
       tabIndex={0}
       aria-label={`Wish: ${wish.text}`}
       role="button"
@@ -71,7 +84,7 @@ export default function WishStar({ wish, seed = 0 }) {
         width: '48px', height: '48px',
       }} />
 
-      {/* Pulsing glow halo */}
+      {/* Pulsing glow */}
       <motion.div
         style={{
           position: 'absolute',
@@ -86,8 +99,9 @@ export default function WishStar({ wish, seed = 0 }) {
         transition={{ duration, repeat: Infinity, delay, ease: 'easeInOut' }}
       />
 
-      {/* Star shape */}
+      {/* Star SVG — ref used to measure position for fixed tooltip */}
       <motion.svg
+        ref={starRef}
         width={22} height={22}
         viewBox="-13 -13 26 26"
         style={{ display: 'block', filter: 'drop-shadow(0 0 6px rgba(255,215,0,0.85))' }}
@@ -100,30 +114,27 @@ export default function WishStar({ wish, seed = 0 }) {
         <path d={STAR_INNER} fill="#FFF4B0" opacity={0.65} />
       </motion.svg>
 
-      {/* Tooltip */}
+      {/* Tooltip — position:fixed so it's never clipped by overflow:hidden */}
       <AnimatePresence>
         {hovered && (
           <motion.div
-            initial={{ opacity: 0, y: tooltipAbove ? 6 : -6 }}
+            initial={{ opacity: 0, y: tipStyle.above ? 6 : -6 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{   opacity: 0, y: tooltipAbove ? 6 : -6 }}
+            exit={{   opacity: 0, y: tipStyle.above ? 6 : -6 }}
             transition={{ duration: 0.18 }}
             style={{
-              position: 'absolute',
-              ...(tooltipAbove
-                ? { bottom: 'calc(100% + 12px)' }
-                : { top:    'calc(100% + 12px)' }),
-              ...tooltipHoriz,
+              position: 'fixed',
+              left:   tipStyle.left,
+              top:    tipStyle.top,
+              bottom: tipStyle.bottom,
+              width:  `${TOOLTIP_W}px`,
               background: '#FFF8F3',
               border: '1px solid rgba(212,175,55,0.65)',
               borderRadius: '10px',
               padding: '8px 14px',
-              width: 'max-content',
-              maxWidth: '185px',
-              whiteSpace: 'normal',
               textAlign: 'center',
               pointerEvents: 'none',
-              zIndex: 50,
+              zIndex: 9999,
               boxShadow: '0 4px 20px rgba(0,0,0,0.45)',
             }}
           >
@@ -136,16 +147,18 @@ export default function WishStar({ wish, seed = 0 }) {
             }}>
               {wish.text}
             </p>
-            {/* Arrow */}
+
+            {/* Arrow — points toward the star */}
             <div style={{
               position: 'absolute',
-              ...(tooltipAbove
-                ? { bottom: '-6px', borderTop: '6px solid rgba(212,175,55,0.65)', borderBottom: 'none' }
-                : { top:    '-6px', borderBottom: '6px solid rgba(212,175,55,0.65)', borderTop: 'none' }),
-              ...arrowHoriz,
+              left: `${tipStyle.arrowLeft}px`,
+              transform: 'translateX(-50%)',
               width: 0, height: 0,
               borderLeft:  '5px solid transparent',
               borderRight: '5px solid transparent',
+              ...(tipStyle.above
+                ? { bottom: '-6px', borderTop:    '6px solid rgba(212,175,55,0.65)', borderBottom: 'none' }
+                : { top:    '-6px', borderBottom: '6px solid rgba(212,175,55,0.65)', borderTop:    'none' }),
             }} />
           </motion.div>
         )}
