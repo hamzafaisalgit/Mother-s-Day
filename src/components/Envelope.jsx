@@ -119,17 +119,22 @@ export default function Envelope({ onOpen }) {
         )}
       </AnimatePresence>
 
-      {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1"
-        animate={{ y: [0, 8, 0], opacity: [0.4, 0.9, 0.4] }}
-        transition={{ duration: 2, repeat: Infinity }}
-      >
-        <span className="font-lato text-xs tracking-widest uppercase" style={{ color: '#E8998D' }}>Scroll</span>
-        <svg width="16" height="24" viewBox="0 0 16 24" fill="none">
-          <path d="M8 0 L8 20 M2 14 L8 20 L14 14" stroke="#E8998D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </motion.div>
+      {/* Scroll indicator — only after envelope is opened */}
+      <AnimatePresence>
+        {clicked && (
+          <motion.div
+            className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1"
+            initial={{ opacity: 0 }}
+            animate={{ y: [0, 8, 0], opacity: [0.4, 0.9, 0.4] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <span className="font-lato text-xs tracking-widest uppercase" style={{ color: '#E8998D' }}>Scroll</span>
+            <svg width="16" height="24" viewBox="0 0 16 24" fill="none">
+              <path d="M8 0 L8 20 M2 14 L8 20 L14 14" stroke="#E8998D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

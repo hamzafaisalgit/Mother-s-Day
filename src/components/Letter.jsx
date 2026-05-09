@@ -1,5 +1,5 @@
 import { motion, useInView } from 'framer-motion';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { TypeAnimation } from 'react-type-animation';
 
 const FlowerCorner = ({ flip }) => (
@@ -26,12 +26,57 @@ const LETTER_SEQUENCE = [
   `Dear Mom,\n\nHappy Mother's Day.\n\nBefore you scroll any further, I want you\nto pause for just a moment, and feel how\ndeeply loved you are.\n\nYou're the quiet strength behind everything\ngood in my life. The warmth in every memory.\nThe reason I know what love looks like.\n\nThis little page is my way of saying what\nwords alone never quite capture.\n\nWith all my heart,\nYour child 💕`, 1000,
 ];
 
-export default function Letter({ visible }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
+export default function Letter({ visible, onDone }) {
+  const ref        = useRef(null);
+  const sentinelRef = useRef(null);
+  const isInView   = useInView(ref, { once: true, margin: '-100px' });
   const [done, setDone] = useState(false);
 
   const shouldType = visible && isInView;
+
+  // Auto-scroll during typing so new lines stay visible.
+  // Uses window.scrollBy which works even while overflow:hidden is active.
+  // Margin is 12% of viewport so it feels right on all screen sizes.
+  useEffect(() => {
+    if (!shouldType || done) return;
+    const tick = () => {
+      if (!sentinelRef.current) return;
+      const margin = window.innerHeight * 0.12;
+      const gap = sentinelRef.current.getBoundingClientRect().bottom - (window.innerHeight - margin);
+      if (gap > 0) window.scrollBy({ top: gap, behavior: 'smooth' });
+    };
+    const id = setInterval(tick, 350);
+    return () => clearInterval(id);
+  }, [shouldType, done]);
+
+  // When typing finishes:
+  //   Step 1 — scroll signature fully into view
+  //   Step 2 — teaser nudge (15% of vh) to show there's more below
+  //   Step 3 — THEN unlock scroll so user can't scroll past us before the tease
+  useEffect(() => {
+    if (!done) return;
+
+    const margin  = window.innerHeight * 0.1;
+    const gap = sentinelRef.current
+      ? sentinelRef.current.getBoundingClientRect().bottom - (window.innerHeight - margin)
+      : 0;
+    if (gap > 0) window.scrollBy({ top: gap, behavior: 'smooth' });
+
+    // Teaser: nudge immediately after letter ends
+    const tTeaser = setTimeout(() => {
+      window.scrollBy({ top: Math.round(window.innerHeight * 0.20), behavior: 'smooth' });
+    }, 20);
+
+    // Unlock scroll just after the teaser nudge completes
+    const tUnlock = setTimeout(() => {
+      onDone?.();
+    }, 100);
+
+    return () => {
+      clearTimeout(tTeaser);
+      clearTimeout(tUnlock);
+    };
+  }, [done]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <section
@@ -80,6 +125,8 @@ export default function Letter({ visible }) {
                 cursor={!done}
               />
             ) : null}
+            {/* Scroll target — tracks the bottom of typed text */}
+            <div ref={sentinelRef} />
           </div>
 
           {/* Divider */}
@@ -91,15 +138,25 @@ export default function Letter({ visible }) {
         </div>
 
         {/* Scroll hint */}
-        <motion.p
-          className="font-dancing text-xl text-center mt-6"
-          style={{ color: '#E8998D' }}
-          initial={{ opacity: 0 }}
-          animate={done ? { opacity: [0, 1, 0.6] } : { opacity: 0 }}
-          transition={{ duration: 1.5, delay: 0.5 }}
+        <motion.div
+          className="text-center mt-8"
+          initial={{ opacity: 0, y: 8 }}
+          animate={done ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
         >
-          scroll for more ↓
-        </motion.p>
+          <motion.p
+            className="font-dancing text-center"
+            style={{
+              color: '#C8546A',
+              fontSize: 'clamp(1.4rem, 4vw, 1.8rem)',
+              letterSpacing: '0.02em',
+            }}
+            animate={done ? { y: [0, 7, 0] } : {}}
+            transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+          >
+            scroll for more ↓
+          </motion.p>
+        </motion.div>
       </motion.div>
     </section>
   );

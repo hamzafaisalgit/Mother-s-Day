@@ -104,7 +104,7 @@ export default function MusicToggle() {
           audio.volume = 0;
           audio.play()
             .then(() => fadeIn(800))
-            .catch(() => {});
+            .catch(err => console.error('Audio play failed:', err));
         }
       }
     };
@@ -125,7 +125,7 @@ export default function MusicToggle() {
         audio.volume = 0;
         audio.play()
           .then(() => { fadeIn(1500); setIsPlaying(true); })
-          .catch(() => {});
+          .catch(err => console.error('Audio play failed:', err));
       }
     } else {
       localStorage.setItem(STORAGE_KEY, 'off');

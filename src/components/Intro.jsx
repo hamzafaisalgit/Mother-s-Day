@@ -145,7 +145,7 @@ export default function Intro() {
             <AnimatePresence>
               {showButton && (
                 <motion.button
-                  className="mt-4 px-10 py-4 rounded-full font-dancing outline-none focus:outline-none relative overflow-hidden"
+                  className="mt-4 px-10 py-4 rounded-full font-dancing outline-none focus:outline-none relative overflow-hidden cursor-pointer"
                   style={{
                     background: 'linear-gradient(135deg, #881337, #9F1239)',
                     color: 'white',
