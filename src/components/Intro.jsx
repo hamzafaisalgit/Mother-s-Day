@@ -168,7 +168,7 @@ export default function Intro() {
                     animate={{ x: ['-100%', '200%'] }}
                     transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut', repeatDelay: 1 }}
                   />
-                  Open your gift 💌
+                  Open your gift
                 </motion.button>
               )}
             </AnimatePresence>
