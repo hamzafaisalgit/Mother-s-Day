@@ -1,4 +1,4 @@
-# 💐 A Love Letter to Mom
+# 💐 A Letter to Mom
 
 An interactive Mother's Day gift built with React — a single-page experience designed to make her smile, pause, and feel deeply loved.
 
@@ -88,26 +88,6 @@ Want to make it more hers? Edit `src/data/content.js`:
 - **`memories`** — the little notes that appear on the garden flowers. Inside jokes land best here.
 
 You can also tweak the opening letter in `src/components/Letter.jsx` and the sign-off in `src/App.jsx`.
-
----
-
-## 📁 Project Structure
-
-```
-src/
-├── components/
-│   ├── Envelope.jsx        # Opening hero section
-│   ├── Letter.jsx          # Typewriter letter
-│   ├── HeartButton.jsx     # Interactive heart + reasons
-│   ├── MemoryGarden.jsx    # Hoverable flower garden
-│   ├── FallingPetals.jsx   # Background petal animation
-│   └── Flower.jsx          # Individual flower SVG
-├── data/
-│   └── content.js          # Reasons & memories arrays
-├── App.jsx
-├── index.css
-└── main.jsx
-```
 
 ---
 

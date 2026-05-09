@@ -10,9 +10,11 @@ const MARGIN    = 10;
 export default function WishStar({ wish, seed = 0 }) {
   const [hovered,  setHovered]  = useState(false);
   const [tipStyle, setTipStyle] = useState({});
-  const reduced    = useReducedMotion();
-  const starRef    = useRef(null);
-  const dismissRef = useRef(null);
+  const reduced      = useReducedMotion();
+  const starRef      = useRef(null);
+  const dismissRef   = useRef(null);
+  const touchStart   = useRef(null);  // {x, y} of touchstart
+  const touchMoved   = useRef(false); // true if finger scrolled
 
   const duration = 2.8 + (seed * 0.41) % 1.4;
   const delay    = (seed * 0.33) % 2.2;
@@ -51,9 +53,20 @@ export default function WishStar({ wish, seed = 0 }) {
     setHovered(false);
   };
 
-  // Touch: tap to toggle, auto-dismiss after 3 s
-  const handleTouch = (e) => {
-    e.preventDefault();
+  // Touch: only open tooltip on a real tap, not while scrolling
+  const handleTouchStart = (e) => {
+    touchStart.current  = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    touchMoved.current  = false;
+  };
+  const handleTouchMove = (e) => {
+    if (!touchStart.current) return;
+    const dx = Math.abs(e.touches[0].clientX - touchStart.current.x);
+    const dy = Math.abs(e.touches[0].clientY - touchStart.current.y);
+    if (dx > 8 || dy > 8) touchMoved.current = true;
+  };
+  const handleTouchEnd = (e) => {
+    if (touchMoved.current) return; // was a scroll — ignore
+    e.preventDefault(); // block ghost-click only on real taps
     clearTimeout(dismissRef.current);
     if (hovered) {
       setHovered(false);
@@ -71,7 +84,9 @@ export default function WishStar({ wish, seed = 0 }) {
       onMouseLeave={hideTip}
       onFocus={showTip}
       onBlur={hideTip}
-      onTouchStart={handleTouch}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
       tabIndex={0}
       aria-label={`Wish: ${wish.text}`}
       role="button"
