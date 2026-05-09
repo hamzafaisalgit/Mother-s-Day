@@ -13,7 +13,7 @@ export const memories = [
   "Your voice calling me to dinner, no matter where in the house I was",
   "The smell of your cooking that I could recognize from outside the door",
   "Falling asleep to your melodious sound",
-  "Sunday mornings that felt slower and warmer than any other day",
+  "The way you taught me how to pray Namaz",
   "The way you'd save the last piece of anything good for me",
   "Coming home from school and telling you everything that happened that day",
 ];
