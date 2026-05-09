@@ -336,8 +336,8 @@ export default function StarSky() {
           transition={{ duration:0.8, delay:0.35 }}
           style={{
             fontStyle: 'italic',
-            fontSize: 'clamp(0.78rem, 2.5vw, 0.85rem)',
-            color: 'rgba(255,248,243,0.5)',
+            fontSize: 'clamp(0.92rem, 3vw, 1rem)',
+            color: 'rgba(255,248,243,0.78)',
             margin: '0 0 28px 0',
           }}
         >

@@ -99,7 +99,7 @@ export default function WishModal({ isOpen, onClose, onSubmit }) {
               textAlign: 'center',
               margin: '0 0 22px 0',
             }}>
-              Anything at all — big, small, silly, sacred
+              Anything at all: big, small, silly, sacred
             </p>
 
             {/* Suggested wish pills */}

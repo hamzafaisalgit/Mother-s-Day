@@ -21,9 +21,9 @@ const FlowerCorner = ({ flip }) => (
 const LETTER_SEQUENCE = [
   'Dear Mom,', 600,
   'Dear Mom,\n\nHappy Mother\'s Day.', 500,
-  'Dear Mom,\n\nHappy Mother\'s Day.\n\nBefore you scroll any further, I want you\nto pause for just a moment — and feel how\ndeeply loved you are.', 400,
-  `Dear Mom,\n\nHappy Mother's Day.\n\nBefore you scroll any further, I want you\nto pause for just a moment — and feel how\ndeeply loved you are.\n\nYou're the quiet strength behind everything\ngood in my life. The warmth in every memory.\nThe reason I know what love looks like.`, 400,
-  `Dear Mom,\n\nHappy Mother's Day.\n\nBefore you scroll any further, I want you\nto pause for just a moment — and feel how\ndeeply loved you are.\n\nYou're the quiet strength behind everything\ngood in my life. The warmth in every memory.\nThe reason I know what love looks like.\n\nThis little page is my way of saying what\nwords alone never quite capture.\n\nWith all my heart,\nYour child 💕`, 1000,
+  'Dear Mom,\n\nHappy Mother\'s Day.\n\nBefore you scroll any further, I want you\nto pause for just a moment, and feel how\ndeeply loved you are.', 400,
+  `Dear Mom,\n\nHappy Mother's Day.\n\nBefore you scroll any further, I want you\nto pause for just a moment, and feel how\ndeeply loved you are.\n\nYou're the quiet strength behind everything\ngood in my life. The warmth in every memory.\nThe reason I know what love looks like.`, 400,
+  `Dear Mom,\n\nHappy Mother's Day.\n\nBefore you scroll any further, I want you\nto pause for just a moment, and feel how\ndeeply loved you are.\n\nYou're the quiet strength behind everything\ngood in my life. The warmth in every memory.\nThe reason I know what love looks like.\n\nThis little page is my way of saying what\nwords alone never quite capture.\n\nWith all my heart,\nYour child 💕`, 1000,
 ];
 
 export default function Letter({ visible }) {

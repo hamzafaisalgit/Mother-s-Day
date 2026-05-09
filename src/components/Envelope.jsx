@@ -108,9 +108,9 @@ export default function Envelope({ onOpen }) {
       <AnimatePresence>
         {!clicked && (
           <motion.p
-            className="font-dancing text-xl md:text-2xl mt-8 text-center"
-            style={{ color: '#E8998D' }}
-            animate={{ opacity: [0.5, 1, 0.5] }}
+            className="font-dancing text-2xl md:text-3xl mt-8 text-center"
+            style={{ color: '#C8546A' }}
+            animate={{ opacity: [0.72, 1, 0.72] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             exit={{ opacity: 0 }}
           >

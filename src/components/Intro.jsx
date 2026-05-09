@@ -133,9 +133,9 @@ export default function Intro() {
             {/* Anticipation hint */}
             <motion.p
               className="font-lato tracking-widest uppercase"
-              style={{ color: '#E8998D', fontSize: '0.72rem', letterSpacing: '0.18em' }}
+              style={{ color: '#E8998D', fontSize: '0.88rem', letterSpacing: '0.18em' }}
               initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 0.7, 0.4, 0.7] }}
+              animate={{ opacity: [0, 1, 0.7, 1] }}
               transition={{ duration: 2.5, delay: 3.2, repeat: Infinity, ease: 'easeInOut' }}
             >
               a letter · reasons · memories · and more

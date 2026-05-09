@@ -6,6 +6,7 @@ import Letter from './components/Letter';
 import StarSky from './components/StarSky';
 import MemoryGarden from './components/MemoryGarden';
 import Closing from './components/Closing';
+import MusicToggle from './components/MusicToggle';
 
 export default function App() {
   const [envelopeOpened, setEnvelopeOpened] = useState(false);
@@ -33,6 +34,9 @@ export default function App() {
         <MemoryGarden />
         <Closing />
       </div>
+
+      {/* Music toggle persists across all sections — fixed position */}
+      <MusicToggle />
     </>
   );
 }
