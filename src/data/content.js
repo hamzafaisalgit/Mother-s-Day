@@ -8,12 +8,12 @@ export const suggestedWishes = [
 ];
 
 export const memories = [
-  "Reading together after the house finally quiets down, sharing stories from the past",
-  "The gentle presence of someone who always made sure everyone was comfortable before resting",
-  "The quiet gestures of love — small things slipped into bags without a word",
-  "That one thing someone made that never tastes the same when anyone else tries to recreate it",
-  "The peaceful morning rituals that filled the home with quiet blessings before dawn",
-  "The look of pure joy when loved ones gathered together for a special occasion",
-  "Every heartfelt goodbye — the subtle way concern and love are expressed when parting",
-  "Sitting alongside someone who taught through presence, learning lessons that weren't spoken",
+  "The way you'd press your hand against my forehead to check for fever",
+  "Folding laundry together while watching TV in the evenings",
+  "Your voice calling me to dinner, no matter where in the house I was",
+  "The smell of your cooking that I could recognize from outside the door",
+  "Falling asleep to your melodious sound",
+  "Sunday mornings that felt slower and warmer than any other day",
+  "The way you'd save the last piece of anything good for me",
+  "Coming home from school and telling you everything that happened that day",
 ];
