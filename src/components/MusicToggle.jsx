@@ -138,19 +138,21 @@ export default function MusicToggle() {
     <>
       <audio ref={audioRef} src="/Song.mp3" loop preload="auto" />
 
-      {/* ── Tooltip prompt ── */}
+      {/* ── Tooltip prompt — sits to the LEFT of the button, vertically centred ── */}
       <AnimatePresence>
         {showPrompt && (
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, x: 16 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 16 }}
             transition={{ type: 'spring', stiffness: 300, damping: 26 }}
             style={{
               position: 'fixed',
-              /* Sits above the button on all screen sizes */
-              bottom: `calc(24px + ${btnSize}px + 14px)`,
-              right: '16px',
+              /* Align vertical centre with button centre */
+              bottom: `${24 + Math.round(btnSize / 2)}px`,
+              transform: 'translateY(50%)',
+              /* Gap of 12px from the button's left edge */
+              right: `${24 + btnSize + 12}px`,
               zIndex: 999,
               background: '#FFF8F3',
               border: '1px solid rgba(212,175,55,0.45)',
@@ -158,7 +160,8 @@ export default function MusicToggle() {
               padding: '12px 18px',
               boxShadow: '0 6px 28px rgba(0,0,0,0.13)',
               pointerEvents: 'none',
-              maxWidth: 'min(260px, calc(100vw - 40px))',
+              maxWidth: 'min(240px, calc(100vw - 120px))',
+              whiteSpace: 'nowrap',
             }}
           >
             <p style={{
@@ -170,20 +173,22 @@ export default function MusicToggle() {
             }}>
               Tap for a softer experience
             </p>
-            {/* Arrow pointing down toward the button */}
+            {/* Arrow pointing RIGHT toward the button */}
             <div style={{
-              position: 'absolute', bottom: '-8px', right: '28px',
+              position: 'absolute', right: '-8px', top: '50%',
+              transform: 'translateY(-50%)',
               width: 0, height: 0,
-              borderLeft: '7px solid transparent',
-              borderRight: '7px solid transparent',
-              borderTop: '8px solid rgba(212,175,55,0.45)',
+              borderTop: '7px solid transparent',
+              borderBottom: '7px solid transparent',
+              borderLeft: '8px solid rgba(212,175,55,0.45)',
             }} />
             <div style={{
-              position: 'absolute', bottom: '-6px', right: '29px',
+              position: 'absolute', right: '-6px', top: '50%',
+              transform: 'translateY(-50%)',
               width: 0, height: 0,
-              borderLeft: '6px solid transparent',
-              borderRight: '6px solid transparent',
-              borderTop: '7px solid #FFF8F3',
+              borderTop: '6px solid transparent',
+              borderBottom: '6px solid transparent',
+              borderLeft: '7px solid #FFF8F3',
             }} />
           </motion.div>
         )}
