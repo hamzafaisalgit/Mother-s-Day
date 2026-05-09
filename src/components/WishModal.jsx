@@ -185,7 +185,7 @@ export default function WishModal({ isOpen, onClose, onSubmit }) {
                 letterSpacing: '0.02em',
               }}
             >
-              Send to the sky ✨
+              Send to the sky
             </button>
           </motion.div>
         </motion.div>
