@@ -171,7 +171,7 @@ export default function MusicToggle() {
               color: '#E8998D',
               lineHeight: 1.4,
             }}>
-              Tap for a softer experience
+              Tap for a better experience
             </p>
             {/* Arrow pointing RIGHT toward the button */}
             <div style={{
