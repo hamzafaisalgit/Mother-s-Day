@@ -82,6 +82,7 @@ export default function Flower({ index, memory }) {
   const [hovered, setHovered] = useState(false);
   const [tapped, setTapped] = useState(false);
   const containerRef = useRef(null);
+  const touchStartPos = useRef(null);
 
   const { Component, props } = FLOWER_COMPONENTS[index % FLOWER_COMPONENTS.length];
   const swayDuration = 2.5 + (index * 0.4) % 2;
@@ -101,8 +102,21 @@ export default function Flower({ index, memory }) {
   }, [tapped]);
 
   const handleTouchStart = (e) => {
-    e.preventDefault(); // prevent simulated mouse events on touch devices
-    setTapped((prev) => !prev);
+    const t = e.touches[0];
+    touchStartPos.current = { x: t.clientX, y: t.clientY };
+  };
+
+  const handleTouchEnd = (e) => {
+    if (!touchStartPos.current) return;
+    const t = e.changedTouches[0];
+    const dx = Math.abs(t.clientX - touchStartPos.current.x);
+    const dy = Math.abs(t.clientY - touchStartPos.current.y);
+    touchStartPos.current = null;
+    // Only treat as a tap if finger barely moved (not a scroll)
+    if (dx < 10 && dy < 10) {
+      e.preventDefault();
+      setTapped((prev) => !prev);
+    }
   };
 
   const isAnimated = hovered || tapped;
@@ -117,6 +131,7 @@ export default function Flower({ index, memory }) {
         onFocus={() => setHovered(true)}
         onBlur={() => setHovered(false)}
         onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
         tabIndex={0}
         role="button"
         aria-label={`Memory ${index + 1}`}
