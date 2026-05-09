@@ -1,10 +1,29 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { suggestedWishes } from '../data/content';
 
 export default function WishModal({ isOpen, onClose, onSubmit }) {
   const [selected, setSelected]     = useState(null);  // index into suggestedWishes
   const [customText, setCustomText] = useState('');
+
+  // Lock background scroll while modal is open (html + body + touchmove for iOS)
+  useEffect(() => {
+    const html         = document.documentElement;
+    const body         = document.body;
+    const preventTouch = (e) => e.preventDefault();
+
+    if (isOpen) {
+      html.style.overflow = 'hidden';
+      body.style.overflow = 'hidden';
+      document.addEventListener('touchmove', preventTouch, { passive: false });
+    }
+
+    return () => {
+      html.style.overflow = '';
+      body.style.overflow = '';
+      document.removeEventListener('touchmove', preventTouch);
+    };
+  }, [isOpen]);
 
   const handleSelectSuggestion = idx => {
     setSelected(idx);
