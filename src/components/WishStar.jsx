@@ -1,5 +1,5 @@
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 const STAR = 'M0,-10 L2.4,-3.4 L9.5,-3.1 L4.3,1.3 L5.9,8.5 L0,4.9 L-5.9,8.5 L-4.3,1.3 L-9.5,-3.1 L-2.4,-3.4 Z';
 const STAR_INNER = 'M0,-7 L1.7,-2.4 L6.7,-2.2 L3,0.9 L4.1,5.9 L0,3.4 L-4.1,5.9 L-3,0.9 L-6.7,-2.2 L-1.7,-2.4 Z';
@@ -11,10 +11,31 @@ export default function WishStar({ wish, seed = 0 }) {
   const [hovered,  setHovered]  = useState(false);
   const [tipStyle, setTipStyle] = useState({});
   const reduced      = useReducedMotion();
+  const containerRef = useRef(null);
   const starRef      = useRef(null);
   const dismissRef   = useRef(null);
   const touchStart   = useRef(null);  // {x, y} of touchstart
   const touchMoved   = useRef(false); // true if finger scrolled
+
+  // Dismiss on scroll or tap outside while tooltip is open
+  useEffect(() => {
+    if (!hovered) return;
+    const dismiss = () => {
+      clearTimeout(dismissRef.current);
+      setHovered(false);
+    };
+    const onOutsideTouch = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) dismiss();
+    };
+    window.addEventListener('scroll', dismiss, { passive: true });
+    document.addEventListener('mousedown', onOutsideTouch);
+    document.addEventListener('touchstart', onOutsideTouch, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', dismiss);
+      document.removeEventListener('mousedown', onOutsideTouch);
+      document.removeEventListener('touchstart', onOutsideTouch);
+    };
+  }, [hovered]);
 
   const duration = 2.8 + (seed * 0.41) % 1.4;
   const delay    = (seed * 0.33) % 2.2;
@@ -79,6 +100,7 @@ export default function WishStar({ wish, seed = 0 }) {
 
   return (
     <div
+      ref={containerRef}
       style={{ position: 'relative', display: 'inline-block' }}
       onMouseEnter={showTip}
       onMouseLeave={hideTip}
