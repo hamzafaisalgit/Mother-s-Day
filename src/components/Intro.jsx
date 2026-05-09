@@ -138,7 +138,7 @@ export default function Intro() {
               animate={{ opacity: [0, 1, 0.7, 1] }}
               transition={{ duration: 2.5, delay: 3.2, repeat: Infinity, ease: 'easeInOut' }}
             >
-              a letter · reasons · memories · and more
+              a letter · wishes · memories · and more
             </motion.p>
 
             {/* Enter button */}
